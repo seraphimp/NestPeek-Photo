@@ -73,7 +73,7 @@ class User extends Authenticatable
             'studio_creators',
             'creator_profile_id',
             'Creator_id,
-            'studio_id'
+            'studio_id',
         )->whereRaw('1 = 0');
     }
 

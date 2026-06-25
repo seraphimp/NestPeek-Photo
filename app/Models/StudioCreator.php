@@ -10,6 +10,8 @@ class StudioCreator extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = 'studio_creators';
+
     protected $fillable = [
         'studio_id',
         'creator_id',

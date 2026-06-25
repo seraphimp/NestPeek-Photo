@@ -72,7 +72,7 @@ class User extends Authenticatable
             Studio::class,
             'studio_creators',
             'creator_profile_id',
-            'Creator_id,
+            'Creator_id',
             'studio_id',
         )->whereRaw('1 = 0');
     }

@@ -128,4 +128,59 @@ class CreatorProfile extends Model
     {
         return $this->studios()->first();
     }
+        * Check if the creator profile is favorited by a user.
+     */
+    public function isFavoritedBy($userId = null)
+    {
+        if (!$userId) {
+            $userId = auth()->id();
+        }
+
+        if (!$userId) {
+            return false;
+        }
+
+        return $this->favorites()->where('user_id', $userId)->exists();
+    }
+
+    /**
+     * Get the favorites for the creator profile.
+     */
+    public function favorites()
+    {
+        return $this->morphMany(Favorite::class, 'favoritable');
+    }
+
+    /**
+     * Toggle favorite status for a user.
+     */
+    public function toggleFavorite($userId = null)
+    {
+        if (!$userId) {
+            $userId = auth()->id();
+        }
+
+        if (!$userId) {
+            return false;
+        }
+
+        $favorite = $this->favorites()->where('user_id', $userId)->first();
+
+        if ($favorite) {
+            $favorite->delete();
+            return false; // Unfavorited
+        } else {
+            $this->favorites()->create(['user_id' => $userId]);
+            return true; // Favorited
+        }
+    }
+
+    /**
+     * Get the favorite count.
+     */
+    public function getFavoriteCountAttribute()
+    {
+        return $this->favorites()->count();
+    }
+
 }

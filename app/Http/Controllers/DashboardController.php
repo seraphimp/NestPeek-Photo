@@ -50,7 +50,7 @@ class DashboardController extends Controller
                 }
             }
 
-            return view('dashboard.creator', compact('user', 'profile', 'stats', 'studio'));
+            return view('dashboard.Creator', compact('user', 'profile', 'stats', 'studio'));
         }
 
         // Client dashboard

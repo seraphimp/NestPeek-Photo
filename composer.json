@@ -10,6 +10,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "ext-bcmath": "*",
         "laravel/cashier": "^16.5",
         "laravel/framework": "^12.0",
         "laravel/reverb": "^1.10",
@@ -41,7 +42,8 @@
     "scripts": {
         "setup": [
             "composer install",
-            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+,
             "@php artisan key:generate",
             "@php artisan migrate --force",
             "npm install",
@@ -67,7 +69,8 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi",
-            "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
+            "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\""
+,
             "@php artisan migrate --graceful --ansi"
         ],
         "pre-package-uninstall": [
@@ -91,3 +94,4 @@
     "minimum-stability": "stable",
     "prefer-stable": true
 }
+

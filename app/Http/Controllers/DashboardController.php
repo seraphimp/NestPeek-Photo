@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Models\StudioCreator;
+use App\Models\Studio;
 
 class DashboardController extends Controller
 {
@@ -28,7 +30,7 @@ class DashboardController extends Controller
             ];
 
             // ================================================================
-            // FIX: Get studio - check BOTH owner AND member
+            // FIXED: Get studio - check BOTH owner AND member
             // ================================================================
             $studio = null;
 
@@ -36,9 +38,16 @@ class DashboardController extends Controller
             if ($user->ownedStudios()->exists()) {
                 $studio = $user->ownedStudios()->with('creators')->first();
             }
-            // If not owner, check if user is a MEMBER through creator profile
-            else if ($profile && $profile->studios()->exists()) {
-                $studio = $profile->studios()->with('creators')->first();
+            // If not owner, check if user is a MEMBER through studio_creators table
+            else {
+                // Direct query using creator_id (matches your migration)
+                $studioCreator = StudioCreator::where('creator_id', $user->id)
+                    ->with('studio.creators')
+                    ->first();
+                
+                if ($studioCreator) {
+                    $studio = $studioCreator->studio;
+                }
             }
 
             return view('dashboard.creator', compact('user', 'profile', 'stats', 'studio'));

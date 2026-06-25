@@ -50,6 +50,10 @@ class Service extends Model
     {
         return $this->morphTo();
     }
+    public function creatorProfile()
+{
+    return $this->belongsTo(CreatorProfile::class, 'creator_id');
+}
 
     public function bookings()
     {

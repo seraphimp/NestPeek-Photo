@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-
 class CreatorProfile extends Model
 {
     use HasFactory;
@@ -89,27 +88,26 @@ class CreatorProfile extends Model
         return $this->belongsToMany(
             Studio::class,
             'studio_creators',
-            'creator_id', // Foreign key on studio_creators table
-            'studio_id', // Local key on studios table
-            'user_id', // Local key on creator_profiles table
-            'id' // Parent key on studios table
+            'creator_id',
+            'studio_id',
+            'user_id',
+            'id'
         )->withPivot('role', 'joined_at', 'status', 'permissions')
          ->withTimestamps();
     }
 
     /**
      * Get the studio where the user is a member.
-     * Alternative: Get the studio directly.
      */
     public function studio()
     {
         return $this->hasOneThrough(
             Studio::class,
             StudioCreator::class,
-            'creator_id', // Foreign key on studio_creators table
-            'id', // Foreign key on studios table
-            'user_id', // Local key on creator_profiles table
-            'studio_id' // Local key on studio_creators table
+            'creator_id',
+            'id',
+            'user_id',
+            'studio_id'
         );
     }
 
@@ -128,7 +126,17 @@ class CreatorProfile extends Model
     {
         return $this->studios()->first();
     }
-        * Check if the creator profile is favorited by a user.
+
+    /**
+     * Get the favorites for the creator profile.
+     */
+    public function favorites()
+    {
+        return $this->morphMany(Favorite::class, 'favoritable');
+    }
+
+    /**
+     * Check if the creator profile is favorited by a user.
      */
     public function isFavoritedBy($userId = null)
     {
@@ -141,14 +149,6 @@ class CreatorProfile extends Model
         }
 
         return $this->favorites()->where('user_id', $userId)->exists();
-    }
-
-    /**
-     * Get the favorites for the creator profile.
-     */
-    public function favorites()
-    {
-        return $this->morphMany(Favorite::class, 'favoritable');
     }
 
     /**
@@ -182,5 +182,4 @@ class CreatorProfile extends Model
     {
         return $this->favorites()->count();
     }
-
 }

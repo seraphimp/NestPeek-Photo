@@ -1,6 +1,10 @@
 <?php
 // ============================================================
+<<<<<<< HEAD
 // FILE: routes/web.php (FULLY COMPLETE)
+=======
+// FILE: routes/web.php
+>>>>>>> f904dc6f13fa0b79d16d33deaac04478b369d83f
 // ============================================================
 
 use Illuminate\Support\Facades\Route;
@@ -18,6 +22,7 @@ use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\AvailabilityController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
+<<<<<<< HEAD
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Admin\AdminController;
 
@@ -26,11 +31,21 @@ Route::get('/', fn() => view('welcome'))->name('home');
 Route::get('/search', [SearchController::class, 'index'])->name('search');
 
 // Creators (public browsing)
+=======
+use App\Http\Controllers\Admin\AdminController;
+
+// Public routes
+Route::get('/', fn() => view('welcome'))->name('home');
+Route::get('/search', [SearchController::class, 'index'])->name('search');
+
+// Creators
+>>>>>>> f904dc6f13fa0b79d16d33deaac04478b369d83f
 Route::prefix('creators')->name('creators.')->group(function () {
     Route::get('/', [CreatorController::class, 'index'])->name('index');
     Route::get('/{creatorProfile:slug}', [CreatorController::class, 'show'])->name('show');
 });
 
+<<<<<<< HEAD
 // Studios (public browsing — index only here; the wildcard {studio} route
 // is registered further down, AFTER the static /studios/create etc routes,
 // so Laravel doesn't mistake "create" for a studio slug)
@@ -42,6 +57,18 @@ Route::prefix('studios')->name('studios.')->group(function () {
 require __DIR__ . '/auth.php';
 
 // ── Authenticated routes ─────────────────────────────────────
+=======
+// Studios
+Route::prefix('studios')->name('studios.')->group(function () {
+    Route::get('/', [StudioController::class, 'index'])->name('index');
+    Route::get('/{studio:slug}', [StudioController::class, 'show'])->name('show');
+});
+
+// Auth
+require __DIR__ . '/auth.php';
+
+// Authenticated routes
+>>>>>>> f904dc6f13fa0b79d16d33deaac04478b369d83f
 Route::middleware(['auth', 'verified'])->group(function () {
 
     // Onboarding
@@ -55,6 +82,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Bookings
     Route::prefix('bookings')->name('bookings.')->group(function () {
+<<<<<<< HEAD
         Route::get('/',                       [BookingController::class, 'index'])->name('index');
         Route::get('/create',                 [BookingController::class, 'create'])->name('create');
         Route::post('/',                      [BookingController::class, 'store'])->name('store');
@@ -63,6 +91,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/{booking}/cancel',      [BookingController::class, 'cancel'])->name('cancel');
         Route::patch('/{booking}/accept',     [BookingController::class, 'accept'])->name('accept');
         Route::patch('/{booking}/decline',    [BookingController::class, 'decline'])->name('decline');
+=======
+        Route::get('/', [BookingController::class, 'index'])->name('index');
+        Route::get('/create', [BookingController::class, 'create'])->name('create');
+        Route::post('/', [BookingController::class, 'store'])->name('store');
+        Route::get('/{booking}', [BookingController::class, 'show'])->name('show');
+        Route::post('/{booking}/confirm', [BookingController::class, 'confirm'])->name('confirm');
+        Route::post('/{booking}/cancel', [BookingController::class, 'cancel'])->name('cancel');
+>>>>>>> f904dc6f13fa0b79d16d33deaac04478b369d83f
     });
 
     // Reviews
@@ -70,14 +106,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Messages
     Route::prefix('messages')->name('messages.')->group(function () {
+<<<<<<< HEAD
         Route::get('/',                        [MessageController::class, 'index'])->name('index');
         Route::get('/{conversation}',          [MessageController::class, 'show'])->name('show');
         Route::post('/{conversation}/send',    [MessageController::class, 'send'])->name('send');
+=======
+        Route::get('/', [MessageController::class, 'index'])->name('index');
+        Route::get('/{conversation}', [MessageController::class, 'show'])->name('show');
+        Route::post('/{conversation}/send', [MessageController::class, 'send'])->name('send');
+>>>>>>> f904dc6f13fa0b79d16d33deaac04478b369d83f
     });
 
     // Favorites
     Route::post('/favorites/toggle', [FavoriteController::class, 'toggle'])->name('favorites.toggle');
 
+<<<<<<< HEAD
     // Portfolio
     Route::get('/portfolio', [PortfolioController::class, 'index'])->name('portfolio.index');
 
@@ -186,3 +229,65 @@ Route::middleware(['auth', 'verified', 'role:creator,studio_owner'])->prefix('st
     Route::post('/{studio}/members/{userId}/role', [StudioController::class, 'changeRole'])->name('studios.members.role');
     Route::delete('/{studio}/members/{userId}', [StudioController::class, 'removeMember'])->name('studios.members.remove');
 });
+=======
+    // Creator profile management
+    Route::middleware('role:creator,studio_owner')->group(function () {
+        Route::get('/my-profile/edit', [CreatorController::class, 'edit'])->name('creators.edit');
+        Route::put('/my-profile', [CreatorController::class, 'update'])->name('creators.update');
+
+        // Services
+        //Route::resource('services', ServiceController::class)->except(['show']);
+
+        // Portfolio
+        Route::post('/portfolios', [PortfolioController::class, 'store'])->name('portfolios.store');
+        Route::delete('/portfolios/{portfolio}', [PortfolioController::class, 'destroy'])->name('portfolios.destroy');
+
+        // Availability
+        //Route::post('/availability', [AvailabilityController::class, 'update'])->name('availability.update');
+
+        // Studio management
+        Route::get('/studios/create', [StudioController::class, 'create'])->name('studios.create');
+        Route::post('/studios', [StudioController::class, 'store'])->name('studios.store');
+        Route::get('/studios/{studio}/edit', [StudioController::class, 'edit'])->name('studios.edit');
+        Route::put('/studios/{studio}', [StudioController::class, 'update'])->name('studios.update');
+    });
+
+    // Payments
+//    Route::post('/bookings/{booking}/pay', [PaymentController::class, 'processDeposit'])->name('payments.deposit');
+  //  Route::post('/bookings/{booking}/pay-full', [PaymentController::class, 'processFull'])->name('payments.full');
+    //Route::get('/payments/success', [PaymentController::class, 'success'])->name('payments.success');
+
+    // Profile settings
+    //Route::get('/settings/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    //Route::put('/settings/profile', [ProfileController::class, 'update'])->name('profile.update');
+});
+
+// Admin routes
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/users', [AdminController::class, 'users'])->name('users');
+    Route::post('/users/{user}/verify', [AdminController::class, 'verifyCreator'])->name('verify');
+    Route::post('/users/{user}/feature', [AdminController::class, 'featureCreator'])->name('feature');
+    Route::get('/bookings', [AdminController::class, 'bookings'])->name('bookings');
+    Route::get('/studios', [AdminController::class, 'studios'])->name('studios');
+});
+
+Route::prefix('bookings')->name('bookings.')->group(function () {
+    Route::get('/', [BookingController::class, 'index'])->name('index');
+    Route::get('/create', [BookingController::class, 'create'])->name('create');
+    Route::post('/', [BookingController::class, 'store'])->name('store');
+    Route::get('/{booking}', [BookingController::class, 'show'])->name('show');
+    Route::post('/{booking}/confirm', [BookingController::class, 'confirm'])->name('confirm');
+    Route::post('/{booking}/cancel', [BookingController::class, 'cancel'])->name('cancel');
+    // ADD THESE TWO:
+    Route::patch('/{booking}/accept', [BookingController::class, 'accept'])->name('accept');
+    Route::patch('/{booking}/decline', [BookingController::class, 'decline'])->name('decline');
+});
+
+Route::patch('/{booking}/accept', [BookingController::class, 'accept'])->name('accept');
+Route::patch('/{booking}/decline', [BookingController::class, 'decline'])->name('decline');
+
+Route::get('/portfolio', [PortfolioController::class, 'index'])->name('portfolio.index');
+// Stripe Webhooks
+//Route::post('/stripe/webhook', [PaymentController::class, 'webhook'])->name('stripe.webhook');
+>>>>>>> f904dc6f13fa0b79d16d33deaac04478b369d83f

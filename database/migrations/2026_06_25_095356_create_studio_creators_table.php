@@ -48,6 +48,7 @@ return new class extends Migration
             $table->index('creator_id');
             $table->index('role');
             $table->index('status');
+            $table->softDeletes();
         });
     }
 

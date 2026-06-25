@@ -87,7 +87,7 @@ class CreatorController extends Controller
             ->first()
             : null;
 
-        return view('creators.show', compact(
+        return view('creators.Show', compact(
             'creatorProfile',
             'isFavorited',
             'isClient',
